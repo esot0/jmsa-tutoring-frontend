@@ -1,0 +1,24 @@
+$t-gray-light: rgb(116, 19, 19);
+$t-gray-dark: rgb(56, 47, 47);
+$dark-gray: #282c34;
+
+
+.header {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+  }
+  
+
+
+section {
+    margin: 0.5em;
+    padding: 1em;
+    text-align: center;
+}
+
+
+

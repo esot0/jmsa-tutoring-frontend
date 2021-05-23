@@ -1,0 +1,67 @@
+
+.message-form-input {
+    margin-top: .8rem;
+    margin-bottom: .8rem;
+}
+
+.message_list {
+    padding: 1rem;
+    background-color: rgba(240, 248, 255, 0.137);
+    display: flex;
+    height: 60vh;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.flavor-text {
+font-style: italic;
+
+}
+
+.message {
+    padding: .8%;
+}
+.message_text {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+.message_time {
+display: block;
+color: rgba(255, 235, 235, 0.432)
+}
+
+.sent, .recieved {
+    border-radius: .3rem;
+    margin: .5%;
+    display: block;
+}
+
+.sent {
+   background-color: rgb(18, 18, 92);
+    align-self: flex-end;
+}
+
+.recieved {
+   background-color: rgb(31, 126, 102);
+    align-self: flex-start;
+}
+
+@media only screen and (min-width: 501px) {
+  .message {
+      width: 25rem;
+  }
+  }
+  
+@media only screen and (max-width: 500px) {
+  .recieved{
+     align-self: center;
+  }
+
+  .sent {
+      align-self: center;
+  }
+}

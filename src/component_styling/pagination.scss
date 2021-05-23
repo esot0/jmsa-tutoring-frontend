@@ -1,0 +1,49 @@
+
+.pagination {
+    display: flex;
+    flex-direction: row;;
+    justify-content: center;
+    text-align: center;
+    justify-self: end;
+    margin-top: 1.5rem;
+    padding: .2rem;
+}
+
+
+.previous,
+.next {
+    color: white;
+    border-radius: 0.5rem;
+    background-color: rgba(34, 155, 211, 0.904);
+    padding: .5rem;
+}
+
+.disabled {
+    color: transparent;
+    background-color: transparent;
+}
+
+.disabled:hover {
+    color: transparent;
+    background-color: transparent;
+}
+
+
+.pagination > li > a{
+    margin-left: .5rem;
+    margin-right: .5rem;
+    text-align: center;
+    margin-right: .4rem;
+    display: inline-block;
+}
+
+.pagination > .active > a {
+    transform: scale(130%);
+    color: rgb(124, 243, 175);
+}
+
+.pagination > li > a:hover {
+   color: yellow;
+    border-radius: .4rem;
+}
+

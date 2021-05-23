@@ -1,0 +1,59 @@
+
+/*must stop stretching when using calendar*/
+.subtitle {
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+    font-size: 1rem;
+}
+
+.bio {
+    color: white;
+}
+
+hr {
+    width: 40%;
+    background-image: linear-gradient(to right, rgb(245, 12, 12), rgba(255, 255, 255, 0.75), rgb(219, 219, 219));
+}
+
+.profile-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.calendar-container {
+    margin: 1rem;
+    padding: .5rem;
+    box-shadow: .5rem -.7rem lightseagreen;
+    background-color: white;
+    color: black;
+}
+.user_sessions {
+    box-shadow: .5rem -.7rem lightseagreen;
+    margin: 1rem;
+    background-color: white;
+    color: black;
+}
+
+.session {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.card-title {
+    color: black;
+}
+
+.wide_card {
+    width: 18rem;
+}
+.profile_picture {
+    height: 10rem;
+    width: 10rem;
+    border-radius: 100%;
+}
+
+
+@media only screen and (max-width: 700px) {
+    
+}
