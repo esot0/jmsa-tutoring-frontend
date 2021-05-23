@@ -4,7 +4,6 @@ import DayPicker, { DateUtils } from "react-day-picker";
 import axios from 'axios'
 
 const SignUpForm = () => {
-	//Profile pictures not working, must fix 
   const [dates, setDates] = useState([]);
   const [errors, setErrors] = useState([]);
   const [role, setRole] = useState('');
