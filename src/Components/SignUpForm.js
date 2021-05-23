@@ -68,23 +68,23 @@ const SignUpForm = () => {
   }
 
   const errorChecker = (e) => {
-    if (!role && errors.indexOf("role")==-1) {
+    if (!role && errors.indexOf("role")===-1) {
       setErrors([...errors, "role"])
     }
 
-    if(!e.target.email.value && errors.indexOf("email")==-1){
+    if(!e.target.email.value && errors.indexOf("email")===-1){
       setErrors([...errors, "email"])
     }
 
-    if(!e.target.full_name.value && errors.indexOf("full_name")==-1){
+    if(!e.target.full_name.value && errors.indexOf("full_name")===-1){
       setErrors([...errors, "full_name"])
     }
 
-    if(!e.target.username.value  && errors.indexOf("username")==-1){
+    if(!e.target.username.value  && errors.indexOf("username")===-1){
       setErrors([...errors, "username"])
     }
 
-    if(!e.target.us_phone_number.value  && errors.indexOf("us_phone_number")==-1){
+    if(!e.target.us_phone_number.value  && errors.indexOf("us_phone_number")===-1){
       setErrors([...errors, "us_phone_number"])
     }
 
@@ -146,7 +146,7 @@ const SignUpForm = () => {
     if (!problem) {
       onCheckChange = (e) => {
         if (bestSubjects.includes(e.target.value)) {
-          setBestSubjects(bestSubjects.filter(element => element != e.target.value));
+          setBestSubjects(bestSubjects.filter(element => element !== e.target.value));
           console.log(bestSubjects);
         }
         else {
@@ -159,7 +159,7 @@ const SignUpForm = () => {
     else {
       onCheckChange = (e) => {
         if (problemSubjects.includes(e.target.value)) {
-          setProblemSubjects(problemSubjects.filter(element => element != e.target.value));
+          setProblemSubjects(problemSubjects.filter(element => element !== e.target.value));
           console.log(problemSubjects);
         }
         else {
@@ -173,7 +173,6 @@ const SignUpForm = () => {
   }
 
   const subjects = (problem) => {
-    const subjects = ['Math', 'Physics', 'Chemistry', 'Biology', 'English', 'History', 'Computer Science']
     let id = problem ? "problem" : "best"
     return (
       <div>

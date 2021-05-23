@@ -1,8 +1,6 @@
 import { Dropdown, Form } from "react-bootstrap";
 import React, { useState, useEffect } from "react"
-import { subjectList } from "../utility";
 import { axios_instance } from '../index'
-//change to get thessse from db later
 
 const Subjects = (props) => {
   const [subjects, setSubjects] = useState([])
@@ -15,7 +13,7 @@ const Subjects = (props) => {
   }, [])
 
   const onDropdownSelect = (eventKey) => {
-    if (eventKey == props.subject) {
+    if (eventKey === props.subject) {
       props.onSelect('')
     }
     else {

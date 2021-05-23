@@ -11,8 +11,6 @@ const parseTime = (dateInput) => {
   return ((date.getHours() > 12 ? date.getHours() - 12 : date.getHours()) + ":" + date.getMinutes() + " " + AMPM);
 }
 
-const subjectList = [];
-//Later to be stuffed into DB
 
 const verifyJWT = () => {
   let user = localStorage.getItem('token');

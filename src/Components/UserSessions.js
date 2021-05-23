@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { propTypes } from 'react-bootstrap/esm/Image';
 import { useParams } from 'react-router-dom'
 import { axios_instance } from '..'
 import {Table} from 'react-bootstrap'
@@ -43,23 +42,23 @@ const UserSessions = (props) => {
             allChecks = filters.studentFilter ? (session.student.username.includes(filters.studentFilter) ? allChecks : false) : allChecks;
             if (filters.startDateFilter) {
                 const sessionDate = new Date(session.date.$date);
-                const sameDate = filters.startDateFilter.getDate() == sessionDate.getDate()
-                    && filters.startDateFilter.getFullYear() == sessionDate.getFullYear()
-                    && filters.startDateFilter.getMonth() == sessionDate.getMonth();
+                const sameDate = filters.startDateFilter.getDate() === sessionDate.getDate()
+                    && filters.startDateFilter.getFullYear() === sessionDate.getFullYear()
+                    && filters.startDateFilter.getMonth() === sessionDate.getMonth();
                 allChecks = sameDate ? allChecks : false
 
                 if (filters.startTimeFilter) {
                     const startDateTime = formatDateTime(filters.startDateFilter, filters.startTimeFilter);
-                    allChecks = sameDate && startDateTime.getHours() == sessionDate.getHours() && startDateTime.getMinutes() == sessionDate.getMinutes() ? allChecks : false
+                    allChecks = sameDate && startDateTime.getHours() === sessionDate.getHours() && startDateTime.getMinutes() === sessionDate.getMinutes() ? allChecks : false
                 }
 
                 if (filters.endTimeFilter) {
                     const endDateTime = formatDateTime(filters.startDateFilter, filters.endTimeFilter);
                     const sessionEndDate = new Date(session.end_time.$date)
-                    allChecks = sameDate && endDateTime.getHours() == sessionEndDate.getHours() && endDateTime.getMinutes() == sessionEndDate.getMinutes() ? allChecks : false
+                    allChecks = sameDate && endDateTime.getHours() === sessionEndDate.getHours() && endDateTime.getMinutes() === sessionEndDate.getMinutes() ? allChecks : false
                 }
             }
-            allChecks = filters.sessionSubjectFilter ? (filters.sessionSubjectFilter == session.subject ? allChecks : false) : allChecks;
+            allChecks = filters.sessionSubjectFilter ? (filters.sessionSubjectFilter === session.subject ? allChecks : false) : allChecks;
             return allChecks;
 
         })
