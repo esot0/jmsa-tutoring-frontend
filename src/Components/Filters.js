@@ -6,15 +6,15 @@ import Subjects from '../Components/Subjects'
 const Filters = (props) => {
     const [open, setOpen] = useState(false);
 
-    const [filter, setFilter] = useState({
-        nameFilter: '',
-        emailFilter: '',
-        usernameFilter: '',
-        phoneFilter: '',
-        roleFilter: '',
-        subjectsFilter: [],
-        availabilityFilter: null
-    })
+    // const [filter, setFilter] = useState({
+    //     nameFilter: '',
+    //     emailFilter: '',
+    //     usernameFilter: '',
+    //     phoneFilter: '',
+    //     roleFilter: '',
+    //     subjectsFilter: [],
+    //     availabilityFilter: null
+    // })
     //This will replace the long string of use states later
     const [nameFilter, setNameFilter] = useState('');
     const [emailFilter, setEmailFilter] = useState('');
@@ -53,9 +53,9 @@ const Filters = (props) => {
 
         while (!foundSameDate && i < user.availability.length) {
             const date = new Date(user.availability[i++].$date);
-            foundSameDate = availabilityFilter.getDate() == date.getDate()
-                && availabilityFilter.getFullYear() == date.getFullYear()
-                && availabilityFilter.getMonth() == date.getMonth();
+            foundSameDate = availabilityFilter.getDate() === date.getDate()
+                && availabilityFilter.getFullYear() === date.getFullYear()
+                && availabilityFilter.getMonth() === date.getMonth();
         }
 
         return foundSameDate;

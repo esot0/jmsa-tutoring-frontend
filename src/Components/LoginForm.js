@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { axios_instance } from '../index'
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import jwt from 'jsonwebtoken'
 const LoginForm = (props) => {
   let history = useHistory();
@@ -59,7 +59,7 @@ const LoginForm = (props) => {
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" placeholder="Password" />
         </Form.Group>
-        <span>Forgot password? Click<a href="/reset_password"> Here</a></span>
+        <span>Forgot password? Click<Link to="/reset_password">Here</Link></span>
         <Button variant="primary" type="submit">Submit</Button>
       </Form>
     </div>);
