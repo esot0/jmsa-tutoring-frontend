@@ -44,14 +44,14 @@ const Profile = () => {
     const addDefaultSrc = (e) => {
         e.preventDefault();
         console.log(e.target)
-        e.target.src = `http://localhost:5000/profile_pictures/placeholder.jpg`
+        e.target.src = `https://jmsa-tutoring-backend.herokuapp.com/profile_pictures/placeholder.jpg`
     }
     return (
         <div>
             <div>
                 {loading && <ReactLoading type={"spin"} color={"white"} height={'10%'} width={'10%'} className="loading_spinner" />}
                 <h1>{user.full_name}</h1>
-                {user.profile_picture ? <img className="profile_picture" src={`http://localhost:5000/${user.profile_picture}`} onError={addDefaultSrc} alt="Profile Picture"></img> : <img className="profile_picture" src="http://localhost:5000/profile_pictures/placeholder.jpg"></img>}
+                {user.profile_picture ? <img className="profile_picture" src={`https://jmsa-tutoring-backend.herokuapp.com/${user.profile_picture}`} onError={addDefaultSrc} alt="Profile Picture"></img> : <img className="profile_picture" src="http://localhost:5000/profile_pictures/placeholder.jpg"></img>}
                 <h2 className="subtitle">@{username}</h2>
                 <p>{username != jwt.username && <Link to={{ pathname: `/user/${jwt.username}/chat` }}>Chat</Link>}</p>
                 {
