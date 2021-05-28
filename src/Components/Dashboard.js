@@ -59,7 +59,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     if (jwt && jwt.rls.includes('student') && jwt.rls.includes('tutor') || jwt.rls.includes('admin')) {
-      axios_instance.get('http://127.0.0.1:5000/user')
+      axios_instance.get('/user')
         .then((res) => {
           return res.data.filter(user => user.username != props.username)
         })
@@ -75,7 +75,7 @@ const Dashboard = (props) => {
     }
 
     else if (jwt && jwt.rls.includes('tutor')) {
-      axios_instance.get('http://127.0.0.1:5000/user/students')
+      axios_instance.get('/user/students')
         .then((res) => {
           return res.data.filter(user => user.username != props.username)
         })
@@ -90,7 +90,7 @@ const Dashboard = (props) => {
         });
     }
     else if (jwt && jwt.rls.includes('student')) {
-      axios_instance.get('http://127.0.0.1:5000/user/tutors')
+      axios_instance.get('/user/tutors')
         .then((res) => {
           return res.data.filter(user => user.username != jwt.username)
         })
