@@ -3,10 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { axios_instance } from '../index'
 import DayPicker from "react-day-picker";
 import UserSessions from './UserSessions';
-import { Row, Col, Container } from 'react-bootstrap'
 import ReactLoading from 'react-loading';
 import { verifyJWT } from '../utility';
-import axios from 'axios';
 //View for viewing own profile and someone else viewing profile
 const Profile = () => {
     let { username } = useParams();

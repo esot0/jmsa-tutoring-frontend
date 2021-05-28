@@ -52,7 +52,7 @@ const SignUpForm = () => {
       }
 
       setSubmitted(true);
-      axios.post('http://127.0.0.1:5000/user/sign_up', bodyFormData)
+      axios.post('https://jmsa-tutoring-backend.herokuapp.com/user/sign_up', bodyFormData)
         .then(function (response) {
           console.log(response);
         })
@@ -232,6 +232,7 @@ const SignUpForm = () => {
 
         <Form.Group controlId="us_phone_number">
           <Form.Label>Phone Number</Form.Label>
+		  <p>Format: XXX-XXX-XX</p>
           <Form.Control name="us_phone_number" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required />
         </Form.Group>
 

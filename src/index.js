@@ -6,7 +6,7 @@ import axios from 'axios'
 import AppRouter from './Components/Router'
 
 export const axios_instance = axios.create({
-  baseURL: 'http://localhost:5000'
+  baseURL: 'https://jmsa-tutoring-backend.herokuapp.com/'
 });
 
 axios_instance.interceptors.request.use(

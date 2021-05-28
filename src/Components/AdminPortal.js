@@ -42,7 +42,7 @@ const AdminPortal = () => {
   }, [offset])
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5000/user')
+    axios.get('https://jmsa-tutoring-backend.herokuapp.com/user')
       .then((res) => {
         //Turn this whole user thing into a hook, consolidate it and Dashboard
         setUsers({ userList: res.data, filtered: res.data, displayed: res.data });

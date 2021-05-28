@@ -19,7 +19,7 @@ const PasswordReset = () => {
             }
         }
 
-        axios.post('http://127.0.0.1:5000/reset_password', { password: e.target.new_pass.value, confirmNewPassword: e.target.confirm_new_pass.value }, config)
+        axios.post('https://jmsa-tutoring-backend.herokuapp.com/reset_password', { password: e.target.new_pass.value, confirmNewPassword: e.target.confirm_new_pass.value }, config)
             .then((res) => {
                 history.push(`/`)
             })
@@ -39,7 +39,7 @@ const PasswordReset = () => {
         const data = {
             email: e.target.email.value
         }
-        axios.post('http://127.0.0.1:5000/send_password_email', data, config)
+        axios.post('https://jmsa-tutoring-backend.herokuapp.com/send_password_email', data, config)
             .then((res) => {
                 setPasswordEmailSent(true);
             })
