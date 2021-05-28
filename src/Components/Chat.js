@@ -56,7 +56,7 @@ const Chat = () => {
 
 	useEffect(() => {
 		if (jwt.rls.includes('student') && jwt.rls.includes('tutor')) {
-			axios_instance.get('http://127.0.0.1:5000/user')
+			axios_instance.get('/user')
 				.then(function (response) {
 					return response.data.filter(user => user.username != username)
 				})
@@ -69,7 +69,7 @@ const Chat = () => {
 		}
 
 		else if (jwt.rls.includes('tutor')) {
-			axios_instance.get('http://127.0.0.1:5000/user/students')
+			axios_instance.get('/user/students')
 				.then(function (response) {
 					return response.data.filter(user => user.username != username)
 				})
@@ -82,7 +82,7 @@ const Chat = () => {
 		}
 
 		else if (jwt.rls.includes('student')) {
-			axios_instance.get('http://127.0.0.1:5000/user/tutors')
+			axios_instance.get('/user/tutors')
 				.then(function (response) {
 					return response.data.filter(user => user.username != username)
 				})
@@ -106,7 +106,7 @@ const Chat = () => {
 				resolve(setLoading(true))
 			})
 				.then
-				(() => axios_instance.get(`http://127.0.0.1:5000/user/${username}/chat/${messages.recipient._id.$oid}`))
+				(() => axios_instance.get(`/user/${username}/chat/${messages.recipient._id.$oid}`))
 				.then((res) => {
 					if (res.data) {
 						set_messages({...messages, offset: 0, displayed: perPage >= res.data.length ? res.data.slice(0, res.data.length) : res.data.slice(0, perPage), messages: [...res.data] });
@@ -137,7 +137,7 @@ const Chat = () => {
 			sender: jwt_decode(localStorage.getItem("token")).id
 		}
 
-		axios_instance.post(`http://127.0.0.1:5000/user/${username}/chat/${messages.recipient._id.$oid}`, message, config)
+		axios_instance.post(`/user/${username}/chat/${messages.recipient._id.$oid}`, message, config)
 			.then((res) => {
 				const newArr = [...messages.messages, res.data]
 				set_messages({
