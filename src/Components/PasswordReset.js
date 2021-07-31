@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
-import axios from 'axios'
+import { axios_non_auth_instance } from '..'
 
 const PasswordReset = () => {
     const history = useHistory();
@@ -19,7 +19,7 @@ const PasswordReset = () => {
             }
         }
 
-        axios.post('https://jmsa-tutoring-backend.herokuapp.com/reset_password', { password: e.target.new_pass.value, confirmNewPassword: e.target.confirm_new_pass.value }, config)
+        axios_non_auth_instance.post('/reset_password', { password: e.target.new_pass.value, confirmNewPassword: e.target.confirm_new_pass.value }, config)
             .then((res) => {
                 history.push(`/`)
             })
@@ -39,7 +39,7 @@ const PasswordReset = () => {
         const data = {
             email: e.target.email.value
         }
-        axios.post('https://jmsa-tutoring-backend.herokuapp.com/send_password_email', data, config)
+        axios_non_auth_instance.post('/send_password_email', data, config)
             .then((res) => {
                 setPasswordEmailSent(true);
             })

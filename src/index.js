@@ -1,14 +1,19 @@
+require('dotenv').config()
 import React from 'react'
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import './component_styling/main.scss'
 import axios from 'axios'
 import AppRouter from './Components/Router'
+import { SITE_ROOT } from './utility';
 
 export const axios_instance = axios.create({
-  baseURL: 'https://jmsa-tutoring-backend.herokuapp.com/'
+  baseURL: SITE_ROOT
 });
 
+export const axios_non_auth_instance = axios.create({
+  baseURL: SITE_ROOT
+})
 axios_instance.interceptors.request.use(
   function (config) {
     const token = localStorage.getItem("token");

@@ -1,6 +1,7 @@
 import React, { useEffect} from 'react'
 import {useLocation, useHistory} from 'react-router-dom'
-import axios from 'axios'
+import { axios_non_auth_instance } from '..';
+
 
 const EmailRegistration = () => {
     const location = useLocation();
@@ -14,7 +15,7 @@ const EmailRegistration = () => {
       }
       }
     useEffect(()=>{
-        axios.get('http://127.0.0.1:5000/finalize', config)
+        axios_non_auth_instance.get('/finalize', config)
        .then((res)=>{
             // if(res.data.access_token){
                 setTimeout(()=>{

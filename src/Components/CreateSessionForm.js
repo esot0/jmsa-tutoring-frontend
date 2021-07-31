@@ -24,7 +24,7 @@ const CreateSessionForm = () => {
   const jwt = verifyJWT();
   useEffect(() => {
     if (jwt.rls.includes('tutor')) {
-      axios_instance.get('http://127.0.0.1:5000/user/students')
+      axios_instance.get('/user/students')
         .then(function (response) {
           return response.data.filter(user => user.username != jwt.username)
         })
@@ -38,7 +38,7 @@ const CreateSessionForm = () => {
     }
 
     if (jwt.rls.includes('student')) {
-      axios_instance.get('http://127.0.0.1:5000/user/tutors')
+      axios_instance.get('/user/tutors')
         .then(function (response) {
           return response.data.filter(user => user.username != jwt.username)
         })
@@ -65,7 +65,7 @@ const CreateSessionForm = () => {
       }
     }
 
-    axios_instance.post('http://127.0.0.1:5000/user/sessions/new', session, config)
+    axios_instance.post('/user/sessions/new', session, config)
       .then((res) => {
         history.push(`/user/${jwt.username}`)
       }).catch((err) => {
@@ -131,7 +131,7 @@ const CreateSessionForm = () => {
               inputProps={
                 { required: true }
               } 
-              onDayClick={handleDayClick}
+              onDayChange={handleDayClick}
               selectedDays={date}
             />
           </div>

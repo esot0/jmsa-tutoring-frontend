@@ -9,6 +9,7 @@ import { Form, Table, Row} from 'react-bootstrap'
 import UserTableListing from './UserTableListing'
 import UserSessions from './UserSessions'
 import Filters from './Filters'
+import { axios_instance } from '..';
 //ensure that start and end date are after each other in edit/sess create
 //allow deletion of profiles
 //auto delete if not 'is active' after a certain time period?
@@ -42,7 +43,7 @@ const AdminPortal = () => {
   }, [offset])
 
   useEffect(() => {
-    axios.get('https://jmsa-tutoring-backend.herokuapp.com/user')
+    axios_instance.get('/user')
       .then((res) => {
         //Turn this whole user thing into a hook, consolidate it and Dashboard
         setUsers({ userList: res.data, filtered: res.data, displayed: res.data });

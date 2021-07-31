@@ -2,6 +2,7 @@ import { React, useState } from 'react';
 import { Form, Button } from 'react-bootstrap'
 import DayPicker, { DateUtils } from "react-day-picker";
 import axios from 'axios'
+import { axios_non_auth_instance } from '..';
 
 const SignUpForm = () => {
   const [dates, setDates] = useState([]);
@@ -52,7 +53,7 @@ const SignUpForm = () => {
       }
 
       setSubmitted(true);
-      axios.post('https://jmsa-tutoring-backend.herokuapp.com/user/sign_up', bodyFormData)
+      axios_non_auth_instance.post('/user/sign_up', bodyFormData)
         .then(function (response) {
           console.log(response);
         })

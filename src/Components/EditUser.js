@@ -36,10 +36,14 @@ const EditUser = (props) => {
 
   const deleteUser = () => {
     history.push("/");
-    axios_instance.delete(`http://127.0.0.1:5000/user/${username}/edit`)
+    axios_instance.delete(`/user/${username}/edit`)
+    .then(()=>{
+      localStorage.clear()
+      //You'd have to delete all their upcoming sessions too.
+    })
     .catch((err)=>{
       console.log(err)
-    })
+    });
 
   }
 
@@ -87,7 +91,7 @@ const EditUser = (props) => {
         'Content-Type': 'application/json',
       }
     }
-    axios_instance.post(`http://127.0.0.1:5000/user/${username}/edit`, edited_user, config)
+    axios_instance.post(`/user/${username}/edit`, edited_user, config)
       .then(function (res) {
         if(jwt.username==username){
         localStorage.setItem("token", res.data.access_token)

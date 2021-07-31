@@ -28,6 +28,7 @@ const Chat = () => {
 	let pageCount = Math.ceil(messages.messages.length) / perPage;
 
 	const handleReceiveMessage = useCallback((msg) => {
+		console.log("Handling received msg...")
 		const id = jwt.id.replace(/['"]+/g, '');
 		if (id == msg.recipient.$oid) {
 			set_messages((previous_messages) => {
@@ -42,7 +43,6 @@ const Chat = () => {
 
 		}
 	}, [])
-
 
 
 
@@ -99,6 +99,7 @@ const Chat = () => {
 		};
 	}, [])
 
+	
 	useEffect(() => {
 		//Getting called faultily after a message is recieved
 		if (messages.recipient && messages.recipient.username != undefined) {
@@ -151,6 +152,8 @@ const Chat = () => {
 			})
 			.then((res) => {
 				socket.emit("msg", res)
+				console.log("Sent out a message")
+				console.log(socket)
 			})
 			.catch((err) => {
 				console.log(err)
@@ -206,9 +209,9 @@ const Chat = () => {
 							breakLabel={'...'}
 						/>
 					</div> :
-					<span class="flavor-text">Start a conversation</span>}</div>
+					<span className="flavor-text">Start a conversation</span>}</div>
 			</div>
-				: <div> <h1>Chat</h1><span class="flavor-text">Select someone to chat with.</span></div>}
+				: <div> <h1>Chat</h1><span className="flavor-text">Select someone to chat with.</span></div>}
 
 			<div className="message-form-input">
 				<div>

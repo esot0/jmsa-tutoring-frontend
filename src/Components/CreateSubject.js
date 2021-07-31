@@ -17,7 +17,7 @@ const CreateSubject = () => {
                 'Content-Type': 'application/json',
             }
         }
-        axios_instance.post("http://127.0.0.1:5000/subjects/new", { 'subject': e.target.subject.value }, config)
+        axios_instance.post("/subjects/new", { 'subject': e.target.subject.value }, config)
             .then((res) => {
                 e.target.subject.value = ""
                 setErrors('')
@@ -29,7 +29,7 @@ const CreateSubject = () => {
     }
 
     const deleteSubject = (id) => {
-        axios_instance.post(`http://127.0.0.1:5000/subjects/delete/${id}`)
+        axios_instance.post(`/subjects/delete/${id}`)
         .then(()=>{
             const newSubjects = subjects.filter((subject)=>subject._id.$oid !== id);
             setSubjects(newSubjects);
@@ -40,7 +40,7 @@ const CreateSubject = () => {
         })
     }
     useEffect(() => {
-        axios_instance.get("http://127.0.0.1:5000/subjects")
+        axios_instance.get(`/subjects`)
             .then((res) => {
                 setSubjects(res.data);
             })
