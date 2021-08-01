@@ -31,7 +31,7 @@ const LoginForm = (props) => {
     axios_instance.post('/user/sign_in', user, config)
       .then(function (response) {
         if (response.data.access_token) {
-          jwt.verify(response.data.access_token, '/NJIBYUGHBYUHIKNBJBYBTGYIUJNBGFB/', () => {
+          jwt.verify(response.data.access_token, process.env.SECRET_KEY, () => {
             localStorage.clear()
             localStorage.setItem("token", response.data.access_token);
             history.push("/")
