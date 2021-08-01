@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-const SITE_ROOT = process.env.SITE_ROOT
+const SITE_ROOT = "https://jmsa-tutoring-backend.herokuapp.com/"
 const parseDate = (dateInput) => {
   const date = new Date(dateInput);
   return date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear() + " " + parseTime(dateInput);

@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 import React from 'react'
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
@@ -5,7 +7,6 @@ import './component_styling/main.scss'
 import axios from 'axios'
 import AppRouter from './Components/Router'
 import { SITE_ROOT } from './utility';
-require('dotenv').config()
 
 export const axios_instance = axios.create({
   baseURL: SITE_ROOT
