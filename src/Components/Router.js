@@ -19,7 +19,7 @@ import EmailRegistration from "./EmailRegistration";
 import PasswordReset from "./PasswordReset";
 import AdminPortal from "./AdminPortal";
 import Errors from "./Errors"
-import AdminRouter from "../AdminRouter";
+// import AdminRouter from "../AdminRouter";
 import {verifyJWT} from "../utility"
 import {SocketContext, socket} from '../Hooks/socketContext'
 
@@ -64,13 +64,13 @@ const AppRouter = () => {
 				</SocketContext.Provider>
             )
           }} />
-          <Route path="/admin" render={({ match }) => {
+          {/* <Route path="/admin" render={({ match }) => {
             return (
               <div>
               {jwt && jwt.rls.includes('admin') ? <AdminRouter /> : <Errors error={401} />}
 			  </div>
             )
-            }}/>
+            }}/> */}
           <Route>
             <Errors error={404} />
           </Route>

@@ -4,9 +4,10 @@ import UserCard from './UserCard'
 import ReactPaginate from 'react-paginate'
 import { Form } from 'react-bootstrap'
 import ReactLoading from 'react-loading';
-import Filters from './Filters'
-import {verifyJWT} from '../utility'
-//Add support for som1 who is tutor + student
+import Filters from './UserFilters'
+import { optionsParticles, verifyJWT } from '../utility'
+import Particle from 'react-tsparticles'
+// I think in Bhorosha I fixed filtering a litle bit make sre to import that
 const Dashboard = (props) => {
   const jwt = verifyJWT();
   const [userList, setUserlist] = useState({
@@ -25,9 +26,9 @@ const Dashboard = (props) => {
     type: ''
   })
 
-  const perPage = 20;
-  const pageCount = Math.ceil(userList.userList.length) / perPage;
-
+  const perPage = 10;
+  const pages = Math.ceil(userList.filtered.length / perPage)
+  const pageCount = pages > 1 ? pages > 1 : 1;
 
   useEffect(() => {
     const filtered = userList.userList.filter((user) => {
@@ -110,14 +111,17 @@ const Dashboard = (props) => {
 
   const handlePageClick = (e) => {
     let selected = e.selected;
+    let off = Math.ceil(selected * perPage)
+
     setOffset(Math.ceil(selected * perPage));
-    setUserlist({ ...userList, displayed: perPage >= userList.filtered.length ? userList.filtered.slice(offset, userList.filtered.length) : userList.filtered.slice(offset, offset + 2) })
+
+    setUserlist({ ...userList, displayed: off + perPage >= userList.filtered.length ? userList.filtered.slice(off, userList.filtered.length) : userList.filtered.slice(off, off + perPage) })
   };
 
 
   const userDash = userList.displayed.map((user) => {
     return (
-      <UserCard className="user_card" profile_picture = {user.profile_picture} key={user._id.$oid} full_name={user.full_name} username={user.username} bio={user.biography} />
+      <UserCard className="user_card" profile_picture={user.profile_picture} key={user._id.$oid} full_name={user.full_name} username={user.username} bio={user.biography} />
     )
   })
 
@@ -127,7 +131,15 @@ const Dashboard = (props) => {
 
   return (
     <div>
+       <div className="tsparticles">
+        <Particle
+          height="100vh"
+          width="100vw"
+          options={optionsParticles}
+        />
+      </div>
       <h1>Users</h1>
+     
       <div>
         <Filters users={userList} offset={offset} perPage={perPage} setUsers={setUserlist} />
         {
@@ -153,9 +165,9 @@ const Dashboard = (props) => {
                   onClick={setRoleFilter}
                 />
               </Form.Group>
-              </Form>) : null
-         
-}
+            </Form>) : null
+
+        }
       </div>
 
       {loading && <ReactLoading type={"spin"} color={"white"} height={'10%'} width={'10%'} className="loading_spinner" />}
@@ -164,8 +176,8 @@ const Dashboard = (props) => {
 
       <ReactPaginate
         pageCount={pageCount}
-        pageRangeDisplayed={5}
-        marginPagesDisplayed={5}
+        pageRangeDisplayed={3}
+        marginPagesDisplayed={3}
         onPageChange={handlePageClick}
         containerClassName={'pagination'}
         subContainerClassName={'pages pagination'}

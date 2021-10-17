@@ -4,7 +4,9 @@ import { axios_instance } from '../index'
 import DayPicker from "react-day-picker";
 import UserSessions from './UserSessions';
 import ReactLoading from 'react-loading';
-import { SITE_ROOT, verifyJWT } from '../utility';
+import Particle from 'react-tsparticles'
+import { optionsParticles, SITE_ROOT, verifyJWT } from '../utility';
+
 //View for viewing own profile and someone else viewing profile
 const Profile = () => {
     let { username } = useParams();
@@ -34,12 +36,12 @@ const Profile = () => {
                 })
                 res.data.availability = parsed_dates;
                 set_user(res.data);
-				console.log(res.data)
+                console.log(res.data)
             })
             .then(() => {
                 setLoading(false);
             })
-    }, [])
+    }, [username])
 
     const addDefaultSrc = (e) => {
         e.preventDefault();
@@ -48,12 +50,13 @@ const Profile = () => {
     }
     return (
         <div>
+           
             <div>
                 {loading && <ReactLoading type={"spin"} color={"white"} height={'10%'} width={'10%'} className="loading_spinner" />}
                 <h1>{user.full_name}</h1>
-                {user.profile_picture ? <img className="profile_picture" src={`${SITE_ROOT}/${user.profile_picture}`} onError={addDefaultSrc} alt="Profile Picture"></img> : <img className="profile_picture" src="https://jmsa-tutoring-backend.herokuapp.com/profile_pictures/placeholder.jpg"></img>}
+                {user.profile_picture ? <img className="profile_picture" src={`${SITE_ROOT}/${user.profile_picture}`} onError={addDefaultSrc} alt="Profile Picture"></img> : <img className="profile_picture" src={`${SITE_ROOT}/profile_pictures/placeholder.jpg`}></img>}
                 <h2 className="subtitle">@{username}</h2>
-                <p>{username != jwt.username && <Link to={{ pathname: `/user/${jwt.username}/chat` }}>Chat</Link>}</p>
+                <p>{username != jwt.username && <Link to={{ pathname: `/user/${jwt.username}/chat/${user._id}` }}>Chat</Link>}</p>
                 {
                     (username == jwt.username || jwt.rls.includes('admin')) && (
                         <Link to={{
@@ -66,26 +69,33 @@ const Profile = () => {
                         }}>Edit
                         </Link>)
                 }
+ <div className="tsparticles">
+                <Particle
+                    height="100vh"
+                    width="100vw"
+                    options={optionsParticles}
+                />
+            </div>
                 <div className="about-div">
                     <p className="bio">{user.biography}</p>
                 </div>
                 <hr />
 
                 {jwt && username == jwt.username || jwt.rls.includes('admin') ?
-                        <div className="profile-items">
-                            <div className="calendar-container">
-                                <h3>Availability</h3>
-                                <DayPicker
-                                    className="calendar"
-                                    format="MM/DD/YYYY"
-                                    selectedDays={user.availability}
-                                    name="availability"
-                                />
-                            </div>
-                            <div className="user_sessions">
-                                {(username == jwt.username || jwt.rls.includes('admin')) ? <div><h3>Sessions</h3><UserSessions /></div> : ''}
-                            </div>
+                    <div className="profile-items">
+                        <div className="calendar-container">
+                            <h3>Availability</h3>
+                            <DayPicker
+                                className="calendar"
+                                format="MM/DD/YYYY"
+                                selectedDays={user.availability}
+                                name="availability"
+                            />
                         </div>
+                        <div className="user_sessions">
+                            {(username == jwt.username || jwt.rls.includes('admin')) ? <div><h3>Sessions</h3><UserSessions /></div> : ''}
+                        </div>
+                    </div>
                     : <div>
                         <h3>Availability</h3>
                         <DayPicker

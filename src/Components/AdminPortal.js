@@ -8,12 +8,8 @@ import ReactPaginate from 'react-paginate'
 import { Form, Table, Row} from 'react-bootstrap'
 import UserTableListing from './UserTableListing'
 import UserSessions from './UserSessions'
-import Filters from './Filters'
+import Filters from './UserFilters'
 import { axios_instance } from '..';
-//ensure that start and end date are after each other in edit/sess create
-//allow deletion of profiles
-//auto delete if not 'is active' after a certain time period?
-//How to verify session happened? 
 
 const AdminPortal = () => {
   //What if only a few head admins could make admin accs, only thru the admin portal?

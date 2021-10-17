@@ -6,7 +6,7 @@ import Select from 'react-select';
 import jwt_decode from 'jwt-decode'
 import ReactLoading from 'react-loading';
 import ReactPaginate from 'react-paginate';
-import { parseDate, verifyJWT } from '../utility'
+import { formatDate, verifyJWT } from '../utility'
 import io from 'socket.io-client'
 import { SocketContext } from '../Hooks/socketContext'
 
@@ -25,8 +25,9 @@ const Chat = () => {
 	const [user_list, set_user_list] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const perPage = 30;
-	let pageCount = Math.ceil(messages.messages.length) / perPage;
+	const pageCount = Math.ceil(messages.messages.length / perPage);
 
+	console.log(pageCount)
 	const handleReceiveMessage = useCallback((msg) => {
 		console.log("Handling received msg...")
 		const id = jwt.id.replace(/['"]+/g, '');
@@ -177,7 +178,7 @@ const Chat = () => {
 
 		const date = new Date(message.timestamp.$date);
 
-		const timestamp = parseDate(date)
+		const timestamp = formatDate(date)
 
 		return (
 			<div key={message._id.$oid} className={`message ${message_class}`}>

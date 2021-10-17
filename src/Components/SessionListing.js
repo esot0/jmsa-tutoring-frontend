@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom'
 import { Card, Button } from 'react-bootstrap';
-import { parseDate, parseTime, verifyJWT } from '../utility'
+import { formatDate, formatTime, verifyJWT } from '../utility'
 import {axios_instance} from '../index'
 const SessionListing = (props) => {
   //wrong time
@@ -47,8 +47,8 @@ const SessionListing = (props) => {
             <Card.Text>
               <span id="tutor">Tutor: @{props.session.tutor.username}</span>
               <p id="date">{
-                parseDate(props.session.date.$date)
-              } to <span id="end_time">{parseTime(props.session.end_time.$date)}</span></p>
+                formatDate(props.session.date.$date)
+              } to <span id="end_time">{formatTime(props.session.end_time.$date)}</span></p>
               <p>Confirmation Status: {(confirmed.tutor_confirmed && confirmed.student_confirmed) ? "Confirmed" : "Not Confirmed"} </p>
 
               {
@@ -70,8 +70,8 @@ const SessionListing = (props) => {
           <td>{props.session.student.username}</td>
           <td>{props.session.tutor.username}</td>
           <td>{props.session.subject}</td>
-          <td>{parseDate(props.session.date.$date)}</td>
-          <td>{parseTime(props.session.end_time.$date)}</td>
+          <td>{formatDate(props.session.date.$date)}</td>
+          <td>{formatTime(props.session.end_time.$date)}</td>
         </tr>)
   )
 

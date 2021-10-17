@@ -1,9 +1,8 @@
-import { React, useState } from 'react';
+import { React, useState, useRef, useCallback, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap'
 import DayPicker, { DateUtils } from "react-day-picker";
-import axios from 'axios'
 import { axios_non_auth_instance } from '..';
-
+import ReactCrop from 'react-image-crop'
 const SignUpForm = () => {
   const [dates, setDates] = useState([]);
   const [errors, setErrors] = useState([]);
@@ -12,12 +11,96 @@ const SignUpForm = () => {
   const [bestSubjects, setBestSubjects] = useState([]);
   const [problemSubjects, setProblemSubjects] = useState([]);
 
-  const requiredFields = {"role":"Role required. ", "full_name": "Full Name required. ", "username": "Username required. ", "password":"Password required. ", "us_phone_number": "Phone required. "}
+  const requiredFields = { "role": "Role required. ", "full_name": "Full Name required. ", "username": "Username required. ", "password": "Password required. ", "us_phone_number": "Phone required. ", "duplicate": "This user already exists." }
+
+  const [isCropping, setIsCropping] = useState(false)
+  const [upImg, setUpImg] = useState({ img: null, name: null });
+  const imgRef = useRef(null);
+  const previewCanvasRef = useRef(null);
+  const [crop, setCrop] = useState({ unit: "%", width: 30, aspect: 3 / 3 });
+  const [completedCrop, setCompletedCrop] = useState(null);
+
+  const onSelectFile = (e) => {
+
+    if (e.target.files && e.target.files.length > 0) {
+      if (e.target.files[0].size > 1500000) {
+        alert("File is too big!");
+        e.target.value = "";
+      }
+      else {
+        setIsCropping(true);
+        const reader = new FileReader();
+        reader.addEventListener("load", () => setUpImg({ name: e.target.files[0].name, img: reader.result }));
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    }
+  };
+
+  const onLoad = useCallback((img) => {
+    imgRef.current = img;
+  }, []);
+
+
+  const getCroppedImg = (canvas, fileName) => {
+    if (!completedCrop || !canvas) {
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            blob.name = fileName;
+            resolve(blob);
+          }
+          else {
+            reject("Error making img blob")
+          }
+        },
+        "image/png",
+        1
+      );
+    });
+  }
+
+
+  useEffect(() => {
+    if (!completedCrop || !previewCanvasRef.current || !imgRef.current) {
+      return;
+    }
+
+    const image = imgRef.current;
+    const canvas = previewCanvasRef.current;
+    const crop = completedCrop;
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    const ctx = canvas.getContext("2d");
+    const pixelRatio = window.devicePixelRatio;
+
+    canvas.width = crop.width * pixelRatio * scaleX;
+    canvas.height = crop.height * pixelRatio * scaleY;
+
+    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    ctx.imageSmoothingQuality = "high";
+
+    ctx.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width * scaleX,
+      crop.height * scaleY
+    );
+  }, [completedCrop]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     errorChecker(e);
-	window.scrollTo(0, 0)
+    window.scrollTo(0, 0)
     if (errors.length === 0) {
       const email = e.target.email.value;
       const full_name = e.target.full_name.value;
@@ -27,21 +110,22 @@ const SignUpForm = () => {
       const us_phone_number = e.target.us_phone_number.value;
       const meeting_link = e.target.meeting_link ? e.target.meeting_link.value : ' ';
       const profile_picture = e.target.profile_picture.files[0];
-	  console.log(e.target)
-	  console.log(profile_picture)
       const bodyFormData = new FormData();
 
       bodyFormData.append("email", email);
       bodyFormData.append('full_name', full_name);
       bodyFormData.append('password', password);
       bodyFormData.append('us_phone_number', us_phone_number);
-      bodyFormData.append('profile_picture', profile_picture);
       bodyFormData.append('biography', biography)
-      bodyFormData.append('username', username);
+      bodyFormData.append('roles', role)
+      bodyFormData.append('username', username.toLowerCase());
       bodyFormData.append('availability', dates.map((date) => {
-        console.log(date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear())
         return date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
       }));
+
+      if (profile_picture) {
+        bodyFormData.append('profile_picture', profile_picture);
+      }
 
       if (role.includes("tutor")) {
         bodyFormData.append('meeting_link', meeting_link);
@@ -52,13 +136,26 @@ const SignUpForm = () => {
         bodyFormData.append('problem_subjects', problemSubjects);
       }
 
-      setSubmitted(true);
+      if (completedCrop && !isCropping) {
+        getCroppedImg(previewCanvasRef.current, upImg.name)
+          .then((res) => {
+            bodyFormData.append("profile_picture", res, upImg.name);
+          })
+      }
+
       axios_non_auth_instance.post('/user/sign_up', bodyFormData)
         .then(function (response) {
-          console.log(response);
+          console.log(response.data)
+          if (response.data.toLowerCase().includes("duplicate")) {
+            setErrors([...errorList, "duplicate"])
+          }
+          else {
+            setErrors([])
+            setSubmitted(true)
+          }
         })
         .catch(function (error) {
-          console.log(error);
+          console.log(error)
         });
     }
   }
@@ -68,29 +165,29 @@ const SignUpForm = () => {
   }
 
   const errorChecker = (e) => {
-    if (!role && errors.indexOf("role")===-1) {
+    if (!role && errors.indexOf("role") === -1) {
       setErrors([...errors, "role"])
     }
 
-    if(!e.target.email.value && errors.indexOf("email")===-1){
+    if (!e.target.email.value && errors.indexOf("email") === -1) {
       setErrors([...errors, "email"])
     }
 
-    if(!e.target.full_name.value && errors.indexOf("full_name")===-1){
+    if (!e.target.full_name.value && errors.indexOf("full_name") === -1) {
       setErrors([...errors, "full_name"])
     }
 
-    if(!e.target.username.value  && errors.indexOf("username")===-1){
+    if (!e.target.username.value && errors.indexOf("username") === -1) {
       setErrors([...errors, "username"])
     }
 
-    if(!e.target.us_phone_number.value  && errors.indexOf("us_phone_number")===-1){
+    if (!e.target.us_phone_number.value && errors.indexOf("us_phone_number") === -1) {
       setErrors([...errors, "us_phone_number"])
     }
 
-	if(e.target.us_phone_number.value && e.target.email.value && e.target.username.value && e.target.full_name.value && role){
-		setErrors([])
-	}
+    if (e.target.us_phone_number.value && e.target.email.value && e.target.username.value && e.target.full_name.value && role) {
+      setErrors([])
+    }
   }
   const handleDayClick = (day, { selected }) => {
     const arr = [...dates];
@@ -160,11 +257,9 @@ const SignUpForm = () => {
       onCheckChange = (e) => {
         if (problemSubjects.includes(e.target.value)) {
           setProblemSubjects(problemSubjects.filter(element => element !== e.target.value));
-          console.log(problemSubjects);
         }
         else {
           setProblemSubjects([...problemSubjects, e.target.value]);
-          console.log(problemSubjects);
         }
       }
     }
@@ -201,9 +296,9 @@ const SignUpForm = () => {
     )
   }
 
-  const errorList = errors.map((errorCode)=>(
-	<p className="form-error" key={errorCode}>{requiredFields[errorCode]}</p>)
-	)
+  const errorList = errors.map((errorCode) => (
+    <p className="form-error" key={errorCode}>{requiredFields[errorCode]}</p>)
+  )
   return (
     <div className="form-comp">
       <h1>Sign Up</h1>
@@ -213,32 +308,32 @@ const SignUpForm = () => {
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="email">
           <Form.Label>Email address</Form.Label>
-          <Form.Control name="email" type="email" required/>
+          <Form.Control name="email" type="email" required />
         </Form.Group>
 
         <Form.Group controlId="full_name">
           <Form.Label>Full Name</Form.Label>
-          <Form.Control name="full_name" type="text" required/>
+          <Form.Control name="full_name" type="text" required />
         </Form.Group>
 
         <Form.Group controlId="username">
           <Form.Label>Username</Form.Label>
-          <Form.Control name="username" type="text" required/>
+          <Form.Control name="username" type="text" required />
         </Form.Group>
 
         <Form.Group controlId="password">
           <Form.Label>Password</Form.Label>
-          <Form.Control name="password" type="password" required/>
+          <Form.Control name="password" type="password" required />
         </Form.Group>
 
         <Form.Group controlId="us_phone_number">
           <Form.Label>Phone Number</Form.Label>
-		  <p>Format: XXX-XXX-XX</p>
+          <p>Format: XXX-XXX-XXXX</p>
           <Form.Control name="us_phone_number" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required />
         </Form.Group>
 
         <Form.Group controlId="biography">
-          <Form.Label>Tell us about yourself!</Form.Label>
+          <Form.Label>Tell us about yourself! If you want to put your phone number and email here so other members can contact you, please do so, but know they will be public.</Form.Label>
           <Form.Control name="biography" as="textarea" rows={3} />
         </Form.Group>
 
@@ -253,7 +348,7 @@ const SignUpForm = () => {
             type="radio"
             id="tutor"
             onClick={updateRole}
-			required
+            required
           />
           <Form.Check
             inline
@@ -264,7 +359,7 @@ const SignUpForm = () => {
             type="radio"
             id="student"
             onClick={updateRole}
-			required
+            required
           />
           <Form.Check
             inline
@@ -275,12 +370,30 @@ const SignUpForm = () => {
             type="radio"
             id="both"
             onClick={updateRole}
-			required
+            required
           />
         </Form.Group>
 
-        <Form.Label>Profile Picture</Form.Label>
-        <input accept=".jpg,.png,.jpeg" type="file" name="profile_picture" />
+        <Form.Group>
+          <Form.Label>Profile Picture</Form.Label>
+          <Form.Control onChange={onSelectFile} type="file" accept=".jpg,.png,.jpeg" name="profile_picture" />
+          <ReactCrop
+            src={upImg.img}
+            onImageLoaded={onLoad}
+            crop={crop}
+            onChange={(c) => setCrop(c)}
+            onComplete={(c) => setCompletedCrop(c)}
+            disabled={!isCropping}
+          />
+          <canvas
+            ref={previewCanvasRef}
+            style={{
+              width: Math.round(completedCrop?.width ?? 0),
+              height: Math.round(completedCrop?.height ?? 0)
+            }}
+          />
+          <div>{isCropping && <Button onClick={() => { setIsCropping(!isCropping) }}>Crop</Button>}</div>
+        </Form.Group>
 
         <Form.Group controlId="availability">
           <Form.Label>*Availability</Form.Label>

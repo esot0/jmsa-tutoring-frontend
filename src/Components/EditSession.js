@@ -8,29 +8,56 @@ import "../../node_modules/react-time-picker/dist/TimePicker.css";
 import "../../node_modules/react-clock/dist/Clock.css";
 import TimePicker from 'react-time-picker'
 import Subjects from './Subjects';
-
+import { formatDateMillisTimeString } from '../utility'
 
 const EditSessionForm = (props) => {
+  if (props.location.state && props.location.state.session) {
+    localStorage.setItem('editedSession', JSON.stringify(props.location.state.session));
+  }
+
+  const localStorageSession = JSON.parse(localStorage.getItem("editedSession"))
   const history = useHistory();
   const [endTime, setEndTime] = useState('');
   const [time, setTime] = useState('');
-  const [session, setSession] = useState(props.location.state.session);
-  const [errors, setErrors] = useState('');
-  const handleErrors = () => {
-    if (!time || !endTime || time > endTime) {
-      setErrors('Invalid time');
+  const [session, setSession] = useState(localStorageSession);
+  const [errors, setErrors] = useState(undefined);
+
+  const greaterTime = (time1, time2) => {
+    const time1Hours = Number(time1.substring(0, 2))
+    const time2Hours = Number(time2.substring(0, 2))
+
+    const time1Minutes = Number(time1.substring(3, 5))
+    const time2Minutes = Number(time2.substring(3, 5))
+
+    if (time1Hours > time2Hours) {
+      return time1;
+    }
+    else if (time1Hours == time2Hours) {
+      return time1Minutes >= time2Minutes ? time1 : time2;
     }
     else {
-      setErrors('')
+      return time2;
     }
+  }
+  const handleErrors = () => {
+    const errorList = []
+    if (!time || !endTime || greaterTime(time, endTime) == time) {
+      errorList.push('Invalid time');
+    }
+    setErrors(errorList)
     return errors;
   }
+
+
   const handleSubmit = (e) => {
     e.preventDefault()
     handleErrors();
     if (!errors) {
-      const endDateTime = formatDateTime(session.date, endTime);
-      const startDateTime = formatDateTime(session.date, time)
+      const endDateTime = formatDateMillisTimeString(session.date.$date, endTime);
+      const startDateTime = formatDateMillisTimeString(session.date.$date, time)
+
+      console.log("FormattedEndDateTime: ", endDateTime)
+      console.log("FormattedStartDateTime: ", startDateTime)
       const edited_session = {
         ...session,
         end_time: endDateTime,
@@ -71,28 +98,9 @@ const EditSessionForm = (props) => {
   const onEndTimeChange = (time) => {
     setEndTime(time);
   }
-  const formatDateTime = (date, time) => {
-    const hour = parseInt(time.substring(0, 1)) == 0 ? parseInt(time.substring(1, 2)) : parseInt(time.substring(0, 2))
-    const minutes = time.substring(2)
-
-
-    const amPM = hour < 12 ? 'AM' : 'PM'
-    const formatted_hour = hour > 12 ? hour - 12 : hour < 10 ? "0" + hour : hour;
-    time = formatted_hour + minutes + " " + amPM
-
-    return date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear() + " " + time;
-  }
 
   const onDropdownSelect = (eventKey) => {
     setSession({ ...session, subject: eventKey });
-  }
-
-  const handleChange = (e) => {
-    const updated_session = {
-      ...session,
-      [e.target.id]: e.target.value
-    }
-    setSession(updated_session)
   }
 
   return (
@@ -116,12 +124,12 @@ const EditSessionForm = (props) => {
             <Form.Label>Date</Form.Label>
             <DayPickerInput
               className="calendar"
-              // disabledDays={{ before: new Date() }}
+              disabledDays={{ before: new Date() }}
               format="M/D/YYYY"
               name="date"
               id="date"
               onDayClick={handleDayClick}
-              selectedDays={new Date(session.date)}
+              selectedDays={new Date(session.date.$date)}
             />
           </Form.Group>
 

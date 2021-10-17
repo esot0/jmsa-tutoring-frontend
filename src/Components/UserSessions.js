@@ -25,7 +25,7 @@ const UserSessions = (props) => {
         startTimeFilter: null,
         endTimeFilter: null
     })
-    const pageCount = Math.ceil(sessions_list.filtered.length) / perPage;
+    const pageCount = Math.ceil(sessions_list.filtered.length / perPage);
 
     const formatDateTime = (date, time) => {
         const month = date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
@@ -83,7 +83,6 @@ const UserSessions = (props) => {
         if (username) {
             axios_instance.get(`http://127.0.0.1:5000/user/${username}/sessions`, config)
                 .then((res) => {
-                    console.log(res.data)
                     set_sessions_list({
                         raw_sessions: res.data,
                         displayed_sessions: res.data.slice(0, perPage),
@@ -144,7 +143,7 @@ const UserSessions = (props) => {
                     </Table>
                 ) : sessions : <h3>No sessions scheduled</h3>}
             </div>
-            <ReactPaginate
+            {(pageCount!=0) &&(<ReactPaginate
                 pageCount={pageCount}
                 pageRangeDisplayed={5}
                 marginPagesDisplayed={5}
@@ -155,7 +154,8 @@ const UserSessions = (props) => {
                 previousLabel={'Previous'}
                 nextLabel={'Next'}
                 breakLabel={'...'}
-            />
+            
+            />)}
         </div>
     )
 }
